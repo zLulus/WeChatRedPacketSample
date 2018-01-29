@@ -33,6 +33,7 @@ namespace WeChatRedPacketSample
 
             m_PayKey = payKey;
             m_WeChatClient = client;
+            m_MerchantId = merchantId;
         }
 
         public async Task<RedPacketSentResult> SendAsync(RedPacket request)
@@ -49,12 +50,9 @@ namespace WeChatRedPacketSample
             sendData.Add("mch_billno", request.BillNumber);
             sendData.Add("mch_id", m_MerchantId);
             sendData.Add("wxappid", request.AppId);
-            sendData.Add("nick_name", request.SendName); //简单起见使用send_name。
             sendData.Add("send_name", request.SendName);
             sendData.Add("re_openid", request.OpenId);
             sendData.Add("total_amount", amountString);
-            sendData.Add("min_value", amountString);
-            sendData.Add("max_value", amountString);
             sendData.Add("total_num", "1");
             sendData.Add("wishing", request.Wishing);
             sendData.Add("client_ip", request.IpAddress);

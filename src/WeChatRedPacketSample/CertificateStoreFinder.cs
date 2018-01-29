@@ -6,25 +6,26 @@ namespace WeChatRedPacketSample
     public class CertificateStoreFinder : ICertificateFinder
     {
         string m_SubjectDistinguishedName;
+        string m_password;
 
-        public CertificateStoreFinder(string subjectDistinguishedName)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="subjectDistinguishedName"></param>
+        /// <param name="password">安装证书时设置的密码</param>
+        public CertificateStoreFinder(string subjectDistinguishedName,string password)
         {
             if (subjectDistinguishedName == null)
                 throw new ArgumentNullException("subjectDistinguishedName");
 
             m_SubjectDistinguishedName = subjectDistinguishedName;
+            m_password = password;
         }
 
         public X509Certificate2 Find()
         {
-            var store = new X509Store(StoreName.My, StoreLocation.CurrentUser);
-            store.Open(OpenFlags.ReadOnly);
-            //你可以采用别的方式来寻找证书，只要能找到就可以。
-            var certs = store.Certificates.Find(X509FindType.FindBySubjectDistinguishedName, m_SubjectDistinguishedName, false);
-            if (certs.Count == 0)
-                throw new Exception("无法找到微信支付证书");
-
-            return certs[0];
+            var cert = new System.Security.Cryptography.X509Certificates.X509Certificate2(m_SubjectDistinguishedName, m_password, X509KeyStorageFlags.MachineKeySet);
+            return cert;
         }
     }
 }
